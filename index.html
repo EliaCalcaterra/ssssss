@@ -4,310 +4,1696 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestione Azienda</title>
+   
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Stili generali */
-        body {
-            background-color: #f8f9fa;
-        }
+       :root {
+    --color-black: #1a1a1a;
+    --color-white: #ffffff;
+    --color-grey: #f8f9fa;
+    --color-grey-dark: #333333;
+    --color-primary: #0d6efd;
+    --color-primary-dark: #0b5ed7;
+    --color-success: #28a745;
+    --color-danger: #dc3545;
+    --color-grey-text: #666666;
+    --color-grey-border: #ced4da;
+}
 
-        .section {
-            display: none;
-        }
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+    color: var(--color-black);
+}
 
-        /* Stili Home */
-        .home-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 2rem;
-        }
+.navbar {
+    background-color: var(--color-white) !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
 
-        .logo-container {
-            margin-bottom: 2rem;
-        }
+.navbar-brand {
+    color: #2c3e50;
+    font-size: 2rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-right: 2rem;
+    position: relative;
+    transition: all 0.3s ease;
+    background: linear-gradient(45deg, #2c3e50, #3498db);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
 
-        .home-logo {
-            max-width: 200px;
-            height: auto;
-        }
+.navbar-brand:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(45deg, #3498db, #2c3e50);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
 
-        .home-card {
-            max-width: 500px;
-            width: 100%;
-        }
+.navbar-brand::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #2c3e50, #3498db);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+    border-radius: 2px;
+}
 
-        /* Stili Dipendenti */
-        .section-header {
-            margin-bottom: 2rem;
-            text-align: center;
-        }
+.navbar-brand:hover::after {
+    transform: scaleX(1);
+}
 
-        .section-header h2 {
-            color: #2c3e50;
-            margin-bottom: 0.5rem;
-        }
+.nav-links {
+    display: flex;
+    gap: 2rem;
+}
 
-        .section-header p {
-            color: #6c757d;
-        }
+.nav-link {
+    color: var(--color-grey-dark) !important;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    padding: 0.5rem 1rem;
+    position: relative;
+    margin: 0 0.5rem;
+}
 
-        .form-card {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-        }
+.nav-link::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-success));
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
 
-        .card-header {
-            background: #f8f9fa;
-            border-bottom: 1px solid #dee2e6;
-            padding: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
+.nav-link:hover {
+    color: var(--color-primary) !important;
+    transform: translateY(-2px);
+}
 
-        .card-header i {
-            color: #0d6efd;
-        }
+.nav-link:hover::before {
+    width: 100%;
+}
 
-        .dipendenti-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
+.nav-link.active {
+    color: var(--color-primary) !important;
+    background: linear-gradient(90deg, rgba(13, 110, 253, 0.1), rgba(40, 167, 69, 0.1));
+    border-radius: 5px;
+}
 
-        .dipendente-card {
-            background: white;
-            border-radius: 10px;
-            padding: 1.5rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+.nav-link.active::before {
+    width: 100%;
+}
 
-        .dipendente-info h5 {
-            margin-bottom: 0.5rem;
-            color: #2c3e50;
-        }
+/* Stili specifici per ogni link */
+.nav-link[data-section="home"] {
+    color: var(--color-primary) !important;
+}
 
-        .dipendente-info p {
-            margin-bottom: 0.25rem;
-            color: #6c757d;
-        }
+.nav-link[data-section="dipendenti"] {
+    color: #2c3e50;
+    font-size: 1rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-right: 1.5rem;
+    position: relative;
+    transition: all 0.3s ease;
+    background: linear-gradient(45deg, #2c3e50, #3498db);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
 
-        /* Stili Finanze */
-        .transazione-form {
-            background: white;
-            border-radius: 10px;
-            padding: 1.5rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
+.nav-link[data-section="finanze"] {
+    color: #2c3e50;
+    font-size: 1rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-right: 1.5rem;
+    position: relative;
+    transition: all 0.3s ease;
+    background: linear-gradient(45deg, #2c3e50, #3498db);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
 
-        .riepilogo-finanze {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-        }
+.nav-link[data-section="magazzino"] {
+    color: #2c3e50;
+    font-size: 1rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-right: 1.5rem;
+    position: relative;
+    transition: all 0.3s ease;
+    background: linear-gradient(45deg, #2c3e50, #3498db);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
 
-        .riepilogo-item {
-            background: white;
-            border-radius: 10px;
-            padding: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
+.nav-link[data-section="home"]::before {
+    background: linear-gradient(90deg, var(--color-primary), #3498db);
+}
 
-        .riepilogo-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-        }
+.nav-link[data-section="dipendenti"]::before {
+    background: linear-gradient(90deg, #2c3e50, #3498db);
+}
 
-        .riepilogo-icon.entrata {
-            background: #d4edda;
-            color: #155724;
-        }
+.nav-link[data-section="finanze"]::before {
+    background: linear-gradient(90deg, #2c3e50, #3498db);
+}
 
-        .riepilogo-icon.uscita {
-            background: #f8d7da;
-            color: #721c24;
-        }
+.nav-link[data-section="magazzino"]::before {
+    background: linear-gradient(90deg, #2c3e50, #3498db);
+}
 
-        .riepilogo-icon.bilancio {
-            background: #cce5ff;
-            color: #004085;
-        }
+.card {
+    background-color: var(--color-white);
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease;
+}
 
-        .riepilogo-details {
-            display: flex;
-            flex-direction: column;
-        }
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(212, 175, 55, 0.1);
+}
 
-        .riepilogo-details .label {
-            font-size: 0.875rem;
-            color: #6c757d;
-        }
+.card-title {
+    color: var(--color-black);
+    font-weight: 600;
+}
 
-        .riepilogo-details .value {
-            font-size: 1.25rem;
-            font-weight: bold;
-        }
+.btn {
+    border-radius: 5px;
+    padding: 8px 16px;
+    font-weight: 500;
+}
 
-        .riepilogo-details .value.positive {
-            color: #28a745;
-        }
+.btn-primary {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+}
 
-        .riepilogo-details .value.negative {
-            color: #dc3545;
-        }
+.btn-primary:hover {
+    background-color: var(--color-primary-dark);
+    border-color: var(--color-primary-dark);
+}
 
-        .lista-transazioni {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
+.btn-outline-primary {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
 
-        .transazione-item {
-            background: white;
-            border-radius: 10px;
-            padding: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
+.btn-outline-primary:hover {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+}
 
-        .transazione-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-        }
+.form-control {
+    background-color: var(--color-white);
+    border: 1px solid var(--color-grey-border);
+    color: var(--color-black);
+    border-radius: 5px;
+    padding: 10px;
+}
 
-        .transazione-item.entrata .transazione-icon {
-            background: #d4edda;
-            color: #155724;
-        }
+.form-control:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
 
-        .transazione-item.uscita .transazione-icon {
-            background: #f8d7da;
-            color: #721c24;
-        }
+.section {
+    animation: fadeIn 0.5s ease-in;
+}
 
-        .transazione-details {
-            flex: 1;
-        }
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
-        .transazione-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.25rem;
-        }
+#listaProdotti {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
 
-        .transazione-header .categoria {
-            font-weight: bold;
-            color: #2c3e50;
-        }
+.prodotto-card, .dipendente-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-grey-border);
+}
 
-        .transazione-header .data {
-            color: #6c757d;
-            font-size: 0.875rem;
-        }
+.prodotto-card h6, .dipendente-card h6 {
+    color: var(--color-black);
+}
 
-        .transazione-details .descrizione {
-            color: #6c757d;
-        }
+.prodotto-card p {
+    color: var(--color-grey-text);
+}
 
-        .transazione-item .importo {
-            font-weight: bold;
-        }
+.dipendente-card {
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: transform 0.2s;
+}
 
-        .transazione-item.entrata .importo {
-            color: #28a745;
-        }
+.dipendente-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(212, 175, 55, 0.1);
+}
 
-        .transazione-item.uscita .importo {
-            color: #dc3545;
-        }
+.dipendente-card .ruolo {
+    color: var(--color-primary);
+    font-weight: 500;
+    margin: 5px 0;
+}
 
-        /* Stili Magazzino */
-        .prodotto-form {
-            background: white;
-            border-radius: 10px;
-            padding: 1.5rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
+.dipendente-card .stipendio {
+    color: var(--color-success);
+    font-weight: 600;
+    margin: 5px 0;
+}
 
-        .card-header-icon {
-            width: 50px;
-            height: 50px;
-            background: #e9ecef;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1rem;
-        }
+.dipendente-card .azioni {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
 
-        .card-header-icon i {
-            font-size: 1.5rem;
-            color: #0d6efd;
-        }
+.dipendente-card .btn-sm {
+    padding: 5px 10px;
+    font-size: 0.875rem;
+}
 
-        .lista-prodotti {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
+.riepilogo-finanze {
+    padding: 15px;
+}
 
-        .prodotto-item {
-            background: white;
-            border-radius: 10px;
-            padding: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
+.riepilogo-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-radius: 10px;
+    background: var(--color-white);
+    margin-bottom: 10px;
+    transition: transform 0.2s;
+    border: 1px solid var(--color-grey-border);
+}
 
-        .prodotto-info h5 {
-            margin-bottom: 0.25rem;
-            color: #2c3e50;
-        }
+.riepilogo-item:hover {
+    transform: translateY(-2px);
+}
 
-        .prodotto-info p {
-            margin-bottom: 0;
-            color: #6c757d;
-        }
+.riepilogo-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    font-size: 1.2rem;
+}
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .riepilogo-finanze {
-                grid-template-columns: 1fr;
-            }
+.riepilogo-icon.entrata {
+    background-color: rgba(212, 175, 55, 0.1);
+    color: var(--color-primary);
+}
 
-            .dipendenti-grid {
-                grid-template-columns: 1fr;
-            }
+.riepilogo-icon.uscita {
+    background-color: rgba(51, 51, 51, 0.1);
+    color: var(--color-grey-dark);
+}
 
-            .transazione-header {
-                flex-direction: column;
-                gap: 0.25rem;
-            }
-        }
+.riepilogo-icon.bilancio {
+    background-color: rgba(212, 175, 55, 0.15);
+    color: var(--color-primary);
+}
+
+.riepilogo-details {
+    flex: 1;
+}
+
+.riepilogo-details .label {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--color-grey-text);
+    margin-bottom: 2px;
+}
+
+.riepilogo-details .value {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--color-black);
+}
+
+.riepilogo-item.totale {
+    background: #e7f1ff;
+    border: 1px solid var(--color-primary);
+}
+
+.riepilogo-item.totale .value {
+    font-size: 1.4rem;
+}
+
+.lista-transazioni {
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 0.5rem;
+}
+
+.transazione-item {
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 0.8rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    border: 1px solid #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.transazione-item:hover {
+    transform: translateX(3px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+    background: #f8f9fa;
+}
+
+.transazione-item.nuova {
+    background: #e7f1ff;
+    border-left: 3px solid #3498db;
+    animation: slideIn 0.5s ease-out;
+}
+
+.transazione-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    flex: 1;
+}
+
+.transazione-data {
+    font-size: 0.8rem;
+    color: #7f8c8d;
+}
+
+.transazione-descrizione {
+    font-weight: 500;
+    color: #2c3e50;
+    font-size: 0.95rem;
+}
+
+.transazione-categoria {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    background: rgba(52, 152, 219, 0.08);
+    color: #3498db;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    margin-top: 0.2rem;
+}
+
+.transazione-importo {
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    min-width: 100px;
+    text-align: right;
+}
+
+.transazione-importo.positive {
+    color: #2ecc71;
+    background: rgba(46, 204, 113, 0.08);
+}
+
+.transazione-importo.negative {
+    color: #e74c3c;
+    background: rgba(231, 76, 60, 0.08);
+}
+
+.btn-check:checked + .btn-outline-success {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-white);
+}
+
+.btn-check:checked + .btn-outline-danger {
+    background-color: var(--color-grey-dark);
+    border-color: var(--color-grey-dark);
+    color: var(--color-white);
+}
+
+.form-select {
+    background-color: var(--color-white);
+    border: 1px solid var(--color-grey-border);
+    color: var(--color-black);
+}
+
+.form-select:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.input-group-text {
+    background-color: var(--color-grey);
+    border: 1px solid var(--color-grey-border);
+    color: var(--color-grey-dark);
+}
+
+.btn-group .btn {
+    border-radius: 5px;
+    margin: 0 2px;
+    border-color: var(--color-grey-border);
+}
+
+.btn-group .btn:first-child {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.btn-group .btn:last-child {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.bilancio-categorie {
+    padding: 15px;
+}
+
+.categoria-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    background: var(--color-white);
+    border: 1px solid var(--color-grey-border);
+}
+
+.categoria-item:last-child {
+    border-bottom: none;
+}
+
+.categoria-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.categoria-nome {
+    font-weight: 500;
+    color: #333;
+}
+
+.categoria-valore {
+    font-weight: 600;
+}
+
+.categoria-valore.positive {
+    color: var(--color-primary);
+}
+
+.categoria-valore.negative {
+    color: var(--color-grey-dark);
+}
+
+.categoria-barra {
+    height: 4px;
+    background-color: #e9ecef;
+    border-radius: 2px;
+    margin-top: 5px;
+    overflow: hidden;
+}
+
+.categoria-barra-fill {
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+.categoria-barra-fill.positive {
+    background-color: var(--color-primary);
+}
+
+.categoria-barra-fill.negative {
+    background-color: var(--color-grey-dark);
+}
+
+.brand-title {
+    font-size: 2.2rem;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.brand-title:hover {
+    color: var(--color-primary-dark);
+    transform: scale(1.05);
+}
+
+/* Stili per il grafico */
+#graficoFinanze {
+    background-color: var(--color-white);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Stili per le card dei dipendenti */
+.dipendente-card .ruolo {
+    color: var(--color-primary);
+    font-weight: 500;
+}
+
+.dipendente-card .stipendio {
+    color: var(--color-success);
+    font-weight: 600;
+}
+
+/* Stili per il form */
+.form-label {
+    color: var(--color-grey-dark);
+    font-weight: 500;
+}
+
+/* Stili per i valori nel riepilogo */
+.riepilogo-details .value {
+    color: var(--color-black);
+}
+
+.riepilogo-details .value.positive {
+    color: var(--color-success);
+}
+
+.riepilogo-details .value.negative {
+    color: var(--color-danger);
+}
+
+.btn-danger {
+    background-color: var(--color-danger);
+    border-color: var(--color-danger);
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+}
+
+/* Scrollbar personalizzata */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-grey);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-primary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary-dark);
+}
+
+/* Stili per la Home */
+.home-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 80vh;
+    padding: 2rem;
+    text-align: center;
+    margin-top: -100px;
+}
+
+.home-logo {
+    width: 500px;
+    height: auto;
+    margin-bottom: 2rem;
+    animation: fadeInDown 1s ease-out;
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));
+    margin-top: 20px;
+}
+
+.logo-container {
+    margin-bottom: 3rem;
+    animation: fadeInDown 1s ease-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.home-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.home-subtitle {
+    font-size: 1.5rem;
+    color: var(--color-grey-text);
+    margin-bottom: 2rem;
+    font-weight: 300;
+}
+
+.home-card {
+    max-width: 500px;
+    width: 100%;
+    animation: fadeInUp 1s ease-out;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    border: none;
+    margin-top: -100px;
+}
+
+.home-card .card-title {
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.home-card .form-label {
+    font-size: 1.1rem;
+    color: var(--color-grey-dark);
+    margin-bottom: 0.5rem;
+}
+
+.home-card .form-control {
+    padding: 0.8rem;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    border: 2px solid var(--color-grey-border);
+    transition: all 0.3s ease;
+}
+
+.home-card .form-control:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+}
+
+.home-card .btn-primary {
+    padding: 0.8rem;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.home-card .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(13, 110, 253, 0.2);
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .home-title {
+        font-size: 2.5rem;
+    }
+    
+    .home-subtitle {
+        font-size: 1.2rem;
+    }
+    
+    .home-card {
+        margin-top: -50px;
+    }
+    
+    .home-logo {
+        width: 300px;
+        margin-top: 10px;
+    }
+    
+    .home-container {
+        margin-top: -50px;
+    }
+}
+
+/* Stili per le sezioni */
+.section-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    position: relative;
+}
+
+.section-header h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    position: relative;
+    display: inline-block;
+}
+
+.section-header h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg,  #2c3e50, #3498db);
+    border-radius: 2px;
+}
+
+.section-header p {
+    font-size: 1.1rem;
+    color: #7f8c8d;
+    margin: 0;
+    font-weight: 300;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* Stili specifici per ogni sezione */
+#home .section-header h2 {
+    color: #2c3e50;
+}
+
+#dipendenti .section-header h2 {
+    color:  #3498db;
+}
+
+#finanze .section-header h2 {
+    color:   #3498db;
+}
+
+#magazzino .section-header h2 {
+    color:   #3498db;
+}
+
+#home .section-header h2::after {
+    background: linear-gradient(90deg, #2c3e50, #3498db);
+}
+
+#dipendenti .section-header h2::after {
+    background: linear-gradient(90deg, #2c3e50, #3498db);
+}
+
+#finanze .section-header h2::after {
+    background: linear-gradient(90deg,  #2c3e50, #3498db);
+}
+
+#magazzino .section-header h2::after {
+    background: linear-gradient(90deg,  #2c3e50, #3498db);
+}
+
+/* Animazione per le intestazioni */
+.section-header h2 {
+    animation: fadeInDown 0.8s ease-out;
+}
+
+.section-header p {
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Stili per le sezioni */
+.section-subtitle {
+    font-size: 1.1rem;
+    color: var(--color-grey-text);
+    margin-bottom: 2rem;
+}
+
+/* Stili per le card dei form */
+.form-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.card-header-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--color-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: -30px auto 20px;
+    color: white;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 8px rgba(13, 110, 253, 0.2);
+}
+
+.form-card .card-title {
+    text-align: center;
+    color: var(--color-primary);
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Stili per le griglie */
+.dipendenti-grid, .prodotti-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.dipendente-card, .prodotto-card {
+    background: var(--color-white);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    border: 1px solid var(--color-grey-border);
+    position: relative;
+    overflow: hidden;
+}
+
+.dipendente-card:hover, .prodotto-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.dipendente-card::before, .prodotto-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--color-primary);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.dipendente-card:hover::before, .prodotto-card:hover::before {
+    opacity: 1;
+}
+
+.dipendente-card h6, .prodotto-card h6 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: var(--color-black);
+}
+
+.dipendente-card .ruolo {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    background: rgba(13, 110, 253, 0.1);
+    color: var(--color-primary);
+    border-radius: 20px;
+    font-size: 0.9rem;
+    margin: 0.5rem 0;
+}
+
+.dipendente-card .stipendio {
+    font-size: 1.1rem;
+    color: var(--color-success);
+    margin: 0.5rem 0;
+}
+
+.prodotto-card .quantita {
+    font-size: 1.1rem;
+    color: var(--color-primary);
+    margin: 0.5rem 0;
+}
+
+.dipendente-card .azioni, .prodotto-card .azioni {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.dipendente-card .btn-sm, .prodotto-card .btn-sm {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+}
+
+/* Stili per i pulsanti di ordinamento */
+.btn-group .btn-outline-secondary {
+    border-color: var(--color-grey-border);
+    color: var(--color-grey-text);
+}
+
+.btn-group .btn-outline-secondary:hover {
+    background-color: var(--color-grey);
+    color: var(--color-grey-dark);
+}
+
+/* Animazioni */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dipendente-card, .prodotto-card {
+    animation: slideIn 0.3s ease-out;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .section-header h2 {
+        font-size: 2rem;
+    }
+    
+    .dipendenti-grid, .prodotti-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .card-header-icon {
+        width: 50px;
+        height: 50px;
+        margin: -25px auto 15px;
+        font-size: 1.2rem;
+    }
+}
+
+.btn-tooltip {
+    position: relative;
+}
+
+.btn-tooltip::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 5px 10px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.btn-tooltip:hover::before {
+    opacity: 1;
+    visibility: visible;
+    bottom: 120%;
+}
+
+/* Stili per la sezione dipendenti */
+#dipendenti .section-header {
+    margin-bottom: 2rem;
+}
+
+.form-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+    overflow: hidden;
+}
+
+.form-card .card-header {
+    background: linear-gradient(45deg, #2c3e50, #3498db);
+    color: white;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.form-card .card-header i {
+    font-size: 1.5rem;
+}
+
+.form-card .card-body {
+    padding: 1.5rem;
+}
+
+.form-control {
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+}
+
+.dipendenti-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.dipendente-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    border: 1px solid #e9ecef;
+}
+
+.dipendente-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+}
+
+.dipendente-card h6 {
+    color: #2c3e50;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.dipendente-card .ruolo {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.dipendente-card .stipendio {
+    color: #27ae60;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.dipendente-card .azioni {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.dipendente-card .btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.dipendente-card .btn:hover {
+    transform: translateY(-2px);
+}
+
+.dipendente-card .btn-outline-primary {
+    color: #3498db;
+    border-color: #3498db;
+}
+
+.dipendente-card .btn-outline-primary:hover {
+    background-color: #3498db;
+    color: white;
+}
+
+.dipendente-card .btn-outline-danger {
+    color: #e74c3c;
+    border-color: #e74c3c;
+}
+
+.dipendente-card .btn-outline-danger:hover {
+    background-color: #e74c3c;
+    color: white;
+}
+
+/* Animazioni */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dipendente-card {
+    animation: slideIn 0.5s ease-out forwards;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .dipendenti-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .dipendente-card {
+        margin: 0 1rem;
+    }
+}
+
+/* Stili per la sezione finanze */
+#finanze .section-header {
+    margin-bottom: 2rem;
+}
+
+.riepilogo-finanze {
+    padding: 1.5rem;
+}
+
+.riepilogo-item {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    border: 1px solid #e9ecef;
+}
+
+.riepilogo-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+}
+
+.riepilogo-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.riepilogo-icon.entrata {
+    background: linear-gradient(45deg, #2ecc71, #27ae60);
+    color: white;
+}
+
+.riepilogo-icon.uscita {
+    background: linear-gradient(45deg, #e74c3c, #c0392b);
+    color: white;
+}
+
+.riepilogo-icon.bilancio {
+    background: linear-gradient(45deg, #3498db, #2980b9);
+    color: white;
+}
+
+.riepilogo-details .label {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+    margin-bottom: 0.5rem;
+}
+
+.riepilogo-details .value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+.riepilogo-details .value.positive {
+    color: #2ecc71;
+}
+
+.riepilogo-details .value.negative {
+    color: #e74c3c;
+}
+
+/* Stili per il form delle transazioni */
+.transazione-form {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.transazione-form .card-title {
+    color: #2c3e50;
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.transazione-form .form-label {
+    color: #7f8c8d;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.transazione-form .form-control,
+.transazione-form .form-select {
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.transazione-form .form-control:focus,
+.transazione-form .form-select:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+}
+
+/* Stili per la lista transazioni */
+.lista-transazioni {
+    max-height: 600px;
+    overflow-y: auto;
+    padding: 1rem;
+}
+
+.transazione-item {
+    background: white;
+    border-radius: 12px;
+    padding: 1.2rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    border: 1px solid #e9ecef;
+}
+
+.transazione-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.transazione-item.nuova {
+    background: #e7f1ff;
+    border-left: 4px solid #3498db;
+    animation: slideIn 0.5s ease-out;
+}
+
+.transazione-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.transazione-data {
+    font-size: 0.85rem;
+    color: #7f8c8d;
+}
+
+.transazione-descrizione {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.transazione-categoria {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    background: rgba(52, 152, 219, 0.1);
+    color: #3498db;
+    border-radius: 20px;
+    font-size: 0.85rem;
+}
+
+.transazione-importo {
+    font-size: 1.2rem;
+    font-weight: 700;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+}
+
+.transazione-importo.positive {
+    color: #2ecc71;
+    background: rgba(46, 204, 113, 0.1);
+}
+
+.transazione-importo.negative {
+    color: #e74c3c;
+    background: rgba(231, 76, 60, 0.1);
+}
+
+/* Stili per la sezione magazzino */
+#magazzino .section-header {
+    margin-bottom: 2rem;
+}
+
+.prodotto-form {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.prodotto-form .card-header-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(45deg, #3498db, #2980b9);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: -30px auto 20px;
+    color: white;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 8px rgba(52, 152, 219, 0.2);
+}
+
+.prodotto-form .card-title {
+    color: #2c3e50;
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-weight: 600;
+}
+
+.prodotto-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    border: 1px solid #e9ecef;
+}
+
+.prodotto-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+}
+
+.prodotto-card h6 {
+    color: #2c3e50;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.prodotto-card .quantita {
+    color: #3498db;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.prodotto-card .quantita i {
+    color: #2ecc71;
+}
+
+.prodotto-card .azioni {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.prodotto-card .btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.prodotto-card .btn:hover {
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .riepilogo-item {
+        margin: 0 1rem 1rem;
+    }
+    
+    .transazione-item {
+        margin: 0 1rem 1rem;
+    }
+    
+    .prodotto-card {
+        margin: 0 1rem 1rem;
+    }
+}
+
+/* Stili per la griglia prodotti */
+.prodotti-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.2rem;
+    padding: 0.5rem;
+}
+
+.prodotto-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    border: 1px solid #e9ecef;
+    position: relative;
+    overflow: hidden;
+}
+
+.prodotto-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+    background: #f8f9fa;
+}
+
+.prodotto-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: #3498db;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.prodotto-card:hover::before {
+    opacity: 1;
+}
+
+.prodotto-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.prodotto-nome {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.prodotto-quantita {
+    background: #e7f1ff;
+    color: #3498db;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.prodotto-actions {
+    display: flex;
+    gap: 0.8rem;
+    margin-top: 1rem;
+}
+
+.prodotto-actions button {
+    flex: 1;
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+    border-radius: 2px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.prodotto-actions .btn-outline-primary {
+    color: #3498db;
+    border-color: #3498db;
+    background: rgba(52, 152, 219, 0.05);
+}
+
+.prodotto-actions .btn-outline-primary:hover {
+    background: #3498db;
+    color: white;
+    transform: translateY(-1px);
+}
+
+.prodotto-actions .btn-outline-danger {
+    color: #e74c3c;
+    border-color: #e74c3c;
+    background: rgba(231, 76, 60, 0.05);
+}
+
+.prodotto-actions .btn-outline-danger:hover {
+    background: #e74c3c;
+    color: white;
+    transform: translateY(-1px);
+}
+
+.prodotto-actions i {
+    font-size: 0.9rem;
+}
+
+/* Stili per la card contenitore */
+.card {
+    background: white;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.card-title {
+    color: #2c3e50;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+}
+
+.text-muted {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+}
+
+/* Stili per i pulsanti di ordinamento */
+.btn-group .btn-outline-secondary {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    border-color: #e9ecef;
+    color: #7f8c8d;
+    transition: all 0.2s ease;
+}
+
+.btn-group .btn-outline-secondary:hover {
+    background-color: #f8f9fa;
+    color: #2c3e50;
+}
+
+.btn-group .btn-outline-secondary i {
+    margin-right: 0.4rem;
+}
+
+/* Animazione per le nuove card */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.prodotto-card.nuovo {
+    animation: slideIn 0.5s ease-out;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .prodotti-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .prodotto-card {
+        padding: 1rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+} 
     </style>
 </head>
 <body>
@@ -553,14 +1939,14 @@
                                 </div>
                                 <div class="btn-group">
                                     <button class="btn btn-outline-secondary btn-sm" onclick="ordinaProdotti('nome')">
-                                        Nome
+                                        <i class="fas fa-sort-alpha-down me-2"></i>Nome
                                     </button>
                                     <button class="btn btn-outline-secondary btn-sm" onclick="ordinaProdotti('quantita')">
-                                        Quantità
+                                        <i class="fas fa-sort-numeric-down me-2"></i>Quantità
                                     </button>
                                 </div>
                             </div>
-                            <div id="listaProdotti" class="lista-prodotti"></div>
+                            <div id="listaProdotti" class="prodotti-grid"></div>
                         </div>
                     </div>
                 </div>
@@ -568,181 +1954,540 @@
         </div>
     </div>
 
-    <!-- Script -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://kit.fontawesome.com/your-font-awesome-kit.js"></script>
     <script>
-        // Funzioni di utilità
-        function showSection(sectionId) {
-            document.querySelectorAll('.section').forEach(section => {
-                section.style.display = 'none';
-            });
-            document.getElementById(sectionId).style.display = 'block';
-        }
+        let state = {
+    nomeAzienda: '',
+    transazioni: [],
+    prodotti: [],
+    dipendenti: [],
+    ultimaTransazioneId: null,
+    ultimoAggiornamento: null
+};
 
-        // Gestione Dipendenti
-        document.getElementById('dipendenteForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const dipendente = {
-                nome: document.getElementById('nomeDipendente').value,
-                cognome: document.getElementById('cognomeDipendente').value,
-                ruolo: document.getElementById('ruoloDipendente').value,
-                stipendio: document.getElementById('stipendioDipendente').value
-            };
-            aggiungiDipendente(dipendente);
-            this.reset();
+// Gestione della navigazione
+function showSection(sectionId) {
+    document.querySelectorAll('.section').forEach(section => {
+        section.style.display = 'none';
+    });
+    document.getElementById(sectionId).style.display = 'block';
+}
+
+// Gestione del form azienda
+document.getElementById('aziendaForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const nomeAzienda = document.getElementById('nomeAzienda').value;
+    state.nomeAzienda = nomeAzienda;
+    localStorage.setItem('nomeAzienda', nomeAzienda);
+    
+    // Mostra un messaggio di conferma
+    alert('Nome azienda salvato con successo!');
+    
+    // Passa automaticamente alla sezione dipendenti
+    showSection('dipendenti');
+});
+
+// Gestione dipendenti
+function modificaDipendenti(delta) {
+    state.numeroDipendenti = Math.max(0, state.numeroDipendenti + delta);
+    document.getElementById('numeroDipendenti').textContent = state.numeroDipendenti;
+    localStorage.setItem('numeroDipendenti', state.numeroDipendenti);
+}
+
+// Gestione form dipendenti
+document.getElementById('dipendenteForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const nuovoDipendente = {
+        id: Date.now(),
+        nome: document.getElementById('nomeDipendente').value,
+        cognome: document.getElementById('cognomeDipendente').value,
+        ruolo: document.getElementById('ruoloDipendente').value,
+        stipendio: parseFloat(document.getElementById('stipendioDipendente').value)
+    };
+    
+    state.dipendenti.push(nuovoDipendente);
+    localStorage.setItem('dipendenti', JSON.stringify(state.dipendenti));
+    aggiornaListaDipendenti();
+    
+    this.reset();
+});
+
+// Gestione transazioni
+document.getElementById('transazioneForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const tipo = document.querySelector('input[name="tipoTransazione"]:checked').value;
+    const importo = parseFloat(document.getElementById('importo').value);
+    const descrizione = document.getElementById('descrizione').value;
+    const categoria = document.getElementById('categoria').value;
+    
+    const nuovaTransazione = {
+        id: Date.now(),
+        data: new Date(),
+        tipo,
+        importo,
+        descrizione,
+        categoria,
+        nuova: true
+    };
+    
+    state.transazioni.unshift(nuovaTransazione);
+    state.ultimaTransazioneId = nuovaTransazione.id;
+    state.ultimoAggiornamento = new Date();
+    localStorage.setItem('transazioni', JSON.stringify(state.transazioni));
+    
+    aggiornaRiepilogoFinanze();
+    filtraTransazioni('tutte');
+    
+    // Evidenzia la nuova transazione per 5 secondi
+    setTimeout(() => {
+        const elemento = document.querySelector(`[data-transazione-id="${nuovaTransazione.id}"]`);
+        if (elemento) {
+            elemento.classList.remove('nuova');
+        }
+    }, 5000);
+    
+    this.reset();
+    // Resetta il radio button all'opzione "entrata"
+    document.getElementById('entrata').checked = true;
+});
+
+function aggiornaRiepilogoFinanze() {
+    const totaleEntrate = state.transazioni
+        .filter(t => t.tipo === 'entrata')
+        .reduce((sum, t) => sum + t.importo, 0);
+    
+    const totaleUscite = state.transazioni
+        .filter(t => t.tipo === 'uscita')
+        .reduce((sum, t) => sum + t.importo, 0);
+    
+    const utileNetto = totaleEntrate - totaleUscite;
+    
+    document.getElementById('totaleEntrate').textContent = `€${totaleEntrate.toFixed(2)}`;
+    document.getElementById('totaleUscite').textContent = `€${totaleUscite.toFixed(2)}`;
+    document.getElementById('utileNetto').textContent = `€${utileNetto.toFixed(2)}`;
+    
+    // Aggiorna il colore dell'utile netto
+    const utileElement = document.getElementById('utileNetto');
+    utileElement.className = 'value ' + (utileNetto >= 0 ? 'positive' : 'negative');
+}
+
+function filtraTransazioni(tipo) {
+    const container = document.getElementById('listaTransazioni');
+    container.innerHTML = '';
+    
+    const transazioniFiltrate = tipo === 'tutte' 
+        ? state.transazioni 
+        : state.transazioni.filter(t => t.tipo === tipo);
+    
+    transazioniFiltrate.forEach(transazione => {
+        const data = new Date(transazione.data).toLocaleDateString('it-IT', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
         });
+        
+        const item = document.createElement('div');
+        item.className = `transazione-item ${transazione.nuova ? 'nuova' : ''}`;
+        item.setAttribute('data-transazione-id', transazione.id);
+        
+        item.innerHTML = `
+            <div class="transazione-info">
+                <div class="transazione-data">${data}</div>
+                <div class="transazione-descrizione">${transazione.descrizione}</div>
+                <span class="transazione-categoria">${transazione.categoria}</span>
+            </div>
+            <div class="transazione-importo ${transazione.tipo === 'entrata' ? 'positive' : 'negative'}">
+                ${transazione.tipo === 'entrata' ? '+' : '-'}€${transazione.importo.toFixed(2)}
+            </div>
+        `;
+        container.appendChild(item);
+    });
+}
 
-        function aggiungiDipendente(dipendente) {
-            const listaDipendenti = document.getElementById('listaDipendenti');
-            const card = document.createElement('div');
-            card.className = 'dipendente-card';
-            card.innerHTML = `
-                <div class="dipendente-info">
-                    <h5>${dipendente.nome} ${dipendente.cognome}</h5>
-                    <p>Ruolo: ${dipendente.ruolo}</p>
-                    <p>Stipendio: €${dipendente.stipendio}</p>
-                </div>
-                <div class="dipendente-actions">
-                    <button class="btn btn-sm btn-danger" onclick="rimuoviDipendente(this)">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            `;
-            listaDipendenti.appendChild(card);
+// Gestione grafico finanze
+function aggiornaGraficoFinanze() {
+    const ctx = document.getElementById('graficoFinanze').getContext('2d');
+    
+    // Raggruppa le transazioni per mese
+    const transazioniPerMese = {
+        entrate: {},
+        uscite: {}
+    };
+    
+    state.transazioni.forEach(transazione => {
+        const mese = transazione.data.toLocaleString('it-IT', { month: 'long' });
+        if (!transazioniPerMese[transazione.tipo][mese]) {
+            transazioniPerMese[transazione.tipo][mese] = 0;
         }
-
-        function rimuoviDipendente(button) {
-            button.closest('.dipendente-card').remove();
-        }
-
-        // Gestione Finanze
-        document.getElementById('transazioneForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const transazione = {
-                tipo: document.querySelector('input[name="tipoTransazione"]:checked').value,
-                importo: document.getElementById('importo').value,
-                categoria: document.getElementById('categoria').value,
-                descrizione: document.getElementById('descrizione').value,
-                data: new Date().toLocaleDateString()
-            };
-            aggiungiTransazione(transazione);
-            this.reset();
-            aggiornaRiepilogoFinanze();
-        });
-
-        function aggiungiTransazione(transazione) {
-            const listaTransazioni = document.getElementById('listaTransazioni');
-            const elemento = document.createElement('div');
-            elemento.className = `transazione-item ${transazione.tipo}`;
-            elemento.innerHTML = `
-                <div class="transazione-icon">
-                    <i class="fas fa-${transazione.tipo === 'entrata' ? 'arrow-up' : 'arrow-down'}"></i>
-                </div>
-                <div class="transazione-details">
-                    <div class="transazione-header">
-                        <span class="categoria">${transazione.categoria}</span>
-                        <span class="data">${transazione.data}</span>
-                    </div>
-                    <div class="descrizione">${transazione.descrizione}</div>
-                </div>
-                <div class="importo ${transazione.tipo}">
-                    ${transazione.tipo === 'entrata' ? '+' : '-'}€${transazione.importo}
-                </div>
-            `;
-            listaTransazioni.insertBefore(elemento, listaTransazioni.firstChild);
-        }
-
-        function aggiornaRiepilogoFinanze() {
-            const transazioni = document.querySelectorAll('.transazione-item');
-            let totaleEntrate = 0;
-            let totaleUscite = 0;
-
-            transazioni.forEach(transazione => {
-                const importo = parseFloat(transazione.querySelector('.importo').textContent.replace(/[^0-9.-]+/g, ''));
-                if (transazione.classList.contains('entrata')) {
-                    totaleEntrate += importo;
-                } else {
-                    totaleUscite += importo;
+        transazioniPerMese[transazione.tipo][mese] += transazione.importo;
+    });
+    
+    // Ottieni tutti i mesi unici
+    const mesi = [...new Set([
+        ...Object.keys(transazioniPerMese.entrate),
+        ...Object.keys(transazioniPerMese.uscite)
+    ])].sort();
+    
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: mesi,
+            datasets: [
+                {
+                    label: 'Entrate',
+                    data: mesi.map(mese => transazioniPerMese.entrate[mese] || 0),
+                    borderColor: '#28a745',
+                    backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                    tension: 0.1,
+                    fill: true
+                },
+                {
+                    label: 'Uscite',
+                    data: mesi.map(mese => transazioniPerMese.uscite[mese] || 0),
+                    borderColor: '#dc3545',
+                    backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                    tension: 0.1,
+                    fill: true
                 }
-            });
-
-            document.getElementById('totaleEntrate').textContent = `€${totaleEntrate.toFixed(2)}`;
-            document.getElementById('totaleUscite').textContent = `€${totaleUscite.toFixed(2)}`;
-            document.getElementById('utileNetto').textContent = `€${(totaleEntrate - totaleUscite).toFixed(2)}`;
-        }
-
-        function filtraTransazioni(tipo) {
-            const transazioni = document.querySelectorAll('.transazione-item');
-            transazioni.forEach(transazione => {
-                if (tipo === 'tutte' || transazione.classList.contains(tipo)) {
-                    transazione.style.display = 'flex';
-                } else {
-                    transazione.style.display = 'none';
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Andamento Finanziario'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.dataset.label}: €${context.parsed.y.toFixed(2)}`;
+                        }
+                    }
                 }
-            });
-        }
-
-        function cancellaCronologiaTransazioni() {
-            if (confirm('Sei sicuro di voler cancellare tutte le transazioni?')) {
-                document.getElementById('listaTransazioni').innerHTML = '';
-                aggiornaRiepilogoFinanze();
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return '€' + value.toFixed(2);
+                        }
+                    }
+                }
             }
         }
+    });
+}
 
-        // Gestione Magazzino
-        document.getElementById('prodottoForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const prodotto = {
-                nome: document.getElementById('nomeProdotto').value,
-                quantita: document.getElementById('quantita').value
-            };
-            aggiungiProdotto(prodotto);
-            this.reset();
-        });
+// Gestione magazzino
+document.getElementById('prodottoForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const nomeProdotto = document.getElementById('nomeProdotto').value;
+    const quantita = parseInt(document.getElementById('quantita').value);
+    
+    // Crea un nuovo prodotto con ID univoco
+    const nuovoProdotto = {
+        id: Date.now(),
+        nome: nomeProdotto,
+        quantita: quantita
+    };
+    
+    state.prodotti.push(nuovoProdotto);
+    localStorage.setItem('prodotti', JSON.stringify(state.prodotti));
+    aggiornaListaProdotti();
+    
+    // Resetta il form e ripristina il pulsante
+    this.reset();
+    const submitButton = this.querySelector('button[type="submit"]');
+    submitButton.innerHTML = '<i class="fas fa-plus me-2"></i>Aggiungi Prodotto';
+});
 
-        function aggiungiProdotto(prodotto) {
-            const listaProdotti = document.getElementById('listaProdotti');
-            const elemento = document.createElement('div');
-            elemento.className = 'prodotto-item';
-            elemento.innerHTML = `
-                <div class="prodotto-info">
-                    <h5>${prodotto.nome}</h5>
-                    <p>Quantità: ${prodotto.quantita}</p>
-                </div>
-                <div class="prodotto-actions">
-                    <button class="btn btn-sm btn-danger" onclick="rimuoviProdotto(this)">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            `;
-            listaProdotti.appendChild(elemento);
-        }
+function aggiornaListaProdotti() {
+    const container = document.getElementById('listaProdotti');
+    container.innerHTML = '';
+    
+    state.prodotti.forEach(prodotto => {
+        container.insertAdjacentHTML('beforeend', creaCardProdotto(prodotto));
+    });
+}
 
-        function rimuoviProdotto(button) {
-            button.closest('.prodotto-item').remove();
-        }
+function rimuoviProdotto(nome) {
+    state.prodotti = state.prodotti.filter(p => p.nome !== nome);
+    localStorage.setItem('prodotti', JSON.stringify(state.prodotti));
+    aggiornaListaProdotti();
+}
 
-        function ordinaProdotti(criterio) {
-            const listaProdotti = document.getElementById('listaProdotti');
-            const prodotti = Array.from(listaProdotti.children);
+function aggiornaListaDipendenti() {
+    const container = document.getElementById('listaDipendenti');
+    container.innerHTML = '';
+    
+    state.dipendenti.forEach(dipendente => {
+        const card = creaCardDipendente(dipendente);
+        container.appendChild(card);
+    });
+}
+
+function modificaDipendente(id) {
+    const dipendente = state.dipendenti.find(d => d.id === id);
+    if (!dipendente) return;
+    
+    document.getElementById('nomeDipendente').value = dipendente.nome;
+    document.getElementById('cognomeDipendente').value = dipendente.cognome;
+    document.getElementById('ruoloDipendente').value = dipendente.ruolo;
+    document.getElementById('stipendioDipendente').value = dipendente.stipendio;
+    
+    // Rimuovi il dipendente dalla lista
+    state.dipendenti = state.dipendenti.filter(d => d.id !== id);
+    localStorage.setItem('dipendenti', JSON.stringify(state.dipendenti));
+    aggiornaListaDipendenti();
+}
+
+function eliminaDipendente(id) {
+    if (confirm('Sei sicuro di voler eliminare questo dipendente?')) {
+        state.dipendenti = state.dipendenti.filter(d => d.id !== id);
+        localStorage.setItem('dipendenti', JSON.stringify(state.dipendenti));
+        aggiornaListaDipendenti();
+    }
+}
+
+// Caricamento dati salvati
+function caricaDatiSalvati() {
+    state.nomeAzienda = localStorage.getItem('nomeAzienda') || '';
+    state.transazioni = JSON.parse(localStorage.getItem('transazioni')) || [];
+    state.prodotti = JSON.parse(localStorage.getItem('prodotti')) || [];
+    state.dipendenti = JSON.parse(localStorage.getItem('dipendenti')) || [];
+    
+    // Aggiorna l'interfaccia
+    document.getElementById('nomeAzienda').value = state.nomeAzienda;
+    aggiornaListaProdotti();
+    aggiornaListaDipendenti();
+    aggiornaRiepilogoFinanze();
+    filtraTransazioni('tutte');
+}
+
+// Inizializzazione
+document.addEventListener('DOMContentLoaded', function() {
+    caricaDatiSalvati();
+    showSection('home');
+});
+
+// Funzione per controllare gli aggiornamenti in tempo reale
+function controllaAggiornamenti() {
+    const transazioniSalvate = JSON.parse(localStorage.getItem('transazioni')) || [];
+    
+    if (transazioniSalvate.length > state.transazioni.length) {
+        const nuoveTransazioni = transazioniSalvate.filter(t => 
+            !state.transazioni.some(et => et.id === t.id)
+        );
+        
+        if (nuoveTransazioni.length > 0) {
+            state.transazioni = transazioniSalvate;
+            state.ultimoAggiornamento = new Date();
             
-            prodotti.sort((a, b) => {
-                if (criterio === 'nome') {
-                    return a.querySelector('h5').textContent.localeCompare(b.querySelector('h5').textContent);
-                } else {
-                    return parseInt(b.querySelector('p').textContent.match(/\d+/)[0]) - 
-                           parseInt(a.querySelector('p').textContent.match(/\d+/)[0]);
+            aggiornaRiepilogoFinanze();
+            filtraTransazioni('tutte');
+            
+            nuoveTransazioni.forEach(transazione => {
+                const elemento = document.querySelector(`[data-transazione-id="${transazione.id}"]`);
+                if (elemento) {
+                    elemento.classList.add('nuova');
+                    setTimeout(() => {
+                        elemento.classList.remove('nuova');
+                    }, 5000);
                 }
             });
-
-            prodotti.forEach(prodotto => listaProdotti.appendChild(prodotto));
         }
+    }
+}
 
-        // Inizializzazione
-        document.addEventListener('DOMContentLoaded', function() {
-            showSection('home');
-        });
+// Avvia il controllo in tempo reale
+setInterval(controllaAggiornamenti, 2000); // Controlla ogni 2 secondi
+
+function aggiornaBilancioCategorie() {
+    const container = document.getElementById('bilancioCategorie');
+    container.innerHTML = '';
+    
+    // Raggruppa le transazioni per categoria
+    const bilancioCategorie = {};
+    
+    state.transazioni.forEach(transazione => {
+        if (!bilancioCategorie[transazione.categoria]) {
+            bilancioCategorie[transazione.categoria] = {
+                entrate: 0,
+                uscite: 0
+            };
+        }
+        
+        if (transazione.tipo === 'entrata') {
+            bilancioCategorie[transazione.categoria].entrate += transazione.importo;
+        } else {
+            bilancioCategorie[transazione.categoria].uscite += transazione.importo;
+        }
+    });
+    
+    // Calcola il totale massimo per la scala delle barre
+    const totali = Object.values(bilancioCategorie).map(cat => 
+        Math.max(cat.entrate, cat.uscite)
+    );
+    const maxTotale = Math.max(...totali);
+    
+    // Crea gli elementi per ogni categoria
+    Object.entries(bilancioCategorie).forEach(([categoria, valori]) => {
+        const saldo = valori.entrate - valori.uscite;
+        const percentuale = maxTotale > 0 ? (Math.abs(saldo) / maxTotale) * 100 : 0;
+        
+        const item = document.createElement('div');
+        item.className = 'categoria-item';
+        item.innerHTML = `
+            <div class="categoria-info">
+                <span class="categoria-nome">${categoria}</span>
+                <span class="categoria-valore ${saldo >= 0 ? 'positive' : 'negative'}">
+                    ${saldo >= 0 ? '+' : '-'}€${Math.abs(saldo).toFixed(2)}
+                </span>
+            </div>
+            <div class="categoria-barra">
+                <div class="categoria-barra-fill ${saldo >= 0 ? 'positive' : 'negative'}"
+                     style="width: ${percentuale}%">
+                </div>
+            </div>
+        `;
+        container.appendChild(item);
+    });
+}
+
+// Funzione per cancellare la cronologia delle transazioni
+function cancellaCronologiaTransazioni() {
+    if (confirm('Sei sicuro di voler cancellare tutte le transazioni? Questa azione non può essere annullata.')) {
+        state.transazioni = [];
+        localStorage.setItem('transazioni', JSON.stringify(state.transazioni));
+        aggiornaRiepilogoFinanze();
+        filtraTransazioni('tutte');
+        
+        // Mostra un messaggio di conferma
+        alert('Cronologia delle transazioni cancellata con successo!');
+    }
+}
+
+// Funzione per ordinare i dipendenti
+function ordinaDipendenti(criterio) {
+    const container = document.getElementById('listaDipendenti');
+    const dipendenti = Array.from(container.children);
+    
+    dipendenti.sort((a, b) => {
+        if (criterio === 'nome') {
+            const nomeA = a.querySelector('h6').textContent.toLowerCase();
+            const nomeB = b.querySelector('h6').textContent.toLowerCase();
+            return nomeA.localeCompare(nomeB);
+        } else if (criterio === 'stipendio') {
+            const stipendioA = parseFloat(a.querySelector('.stipendio').textContent.replace('€', ''));
+            const stipendioB = parseFloat(b.querySelector('.stipendio').textContent.replace('€', ''));
+            return stipendioB - stipendioA;
+        }
+        return 0;
+    });
+    
+    // Rimuovi e riaggiungi gli elementi nell'ordine corretto
+    dipendenti.forEach(dipendente => container.appendChild(dipendente));
+}
+
+// Funzione per ordinare i prodotti
+function ordinaProdotti(criterio) {
+    const container = document.getElementById('listaProdotti');
+    const prodotti = Array.from(container.children);
+    
+    prodotti.sort((a, b) => {
+        if (criterio === 'nome') {
+            const nomeA = a.querySelector('h6').textContent.toLowerCase();
+            const nomeB = b.querySelector('h6').textContent.toLowerCase();
+            return nomeA.localeCompare(nomeB);
+        } else if (criterio === 'quantita') {
+            const quantitaA = parseInt(a.querySelector('.quantita').textContent);
+            const quantitaB = parseInt(b.querySelector('.quantita').textContent);
+            return quantitaB - quantitaA;
+        }
+        return 0;
+    });
+    
+    // Rimuovi e riaggiungi gli elementi nell'ordine corretto
+    prodotti.forEach(prodotto => container.appendChild(prodotto));
+}
+
+// Aggiorna la funzione di creazione delle card dei dipendenti
+function creaCardDipendente(dipendente) {
+    const card = document.createElement('div');
+    card.className = 'dipendente-card';
+    card.innerHTML = `
+        <h6>${dipendente.nome} ${dipendente.cognome}</h6>
+        <div class="ruolo">${dipendente.ruolo}</div>
+        <div class="stipendio">€${dipendente.stipendio.toFixed(2)}</div>
+        <div class="azioni">
+            <button class="btn btn-sm btn-outline-primary btn-tooltip" 
+                    onclick="modificaDipendente(${dipendente.id})"
+                    data-tooltip="Modifica dati dipendente">
+                <i class="fas fa-edit"></i> Modifica
+            </button>
+            <button class="btn btn-sm btn-outline-danger btn-tooltip" 
+                    onclick="eliminaDipendente(${dipendente.id})"
+                    data-tooltip="Elimina dipendente">
+                <i class="fas fa-trash"></i> Elimina
+            </button>
+        </div>
+    `;
+    return card;
+}
+
+// Aggiorna la funzione di creazione delle card dei prodotti
+function creaCardProdotto(prodotto) {
+    return `
+        <div class="prodotto-card" id="prodotto-${prodotto.id}">
+            <div class="prodotto-header">
+                <h6 class="prodotto-nome">${prodotto.nome}</h6>
+                <span class="prodotto-quantita">
+                    <i class="fas fa-box"></i> ${prodotto.quantita}
+                </span>
+            </div>
+            <div class="prodotto-actions">
+                <button class="btn btn-outline-primary btn-sm" onclick="modificaProdotto(${prodotto.id})">
+                    <i class="fas fa-edit"></i> Modifica
+                </button>
+                <button class="btn btn-outline-danger btn-sm" onclick="eliminaProdotto(${prodotto.id})">
+                    <i class="fas fa-trash"></i> Elimina
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+function modificaProdotto(id) {
+    const prodotto = state.prodotti.find(p => p.id === id);
+    if (!prodotto) return;
+    
+    // Popola il form con i dati del prodotto
+    document.getElementById('nomeProdotto').value = prodotto.nome;
+    document.getElementById('quantita').value = prodotto.quantita;
+    
+    // Cambia il testo del pulsante submit
+    const submitButton = document.querySelector('#prodottoForm button[type="submit"]');
+    submitButton.innerHTML = '<i class="fas fa-save me-2"></i>Salva Modifiche';
+    
+    // Rimuovi il prodotto dalla lista
+    state.prodotti = state.prodotti.filter(p => p.id !== id);
+    localStorage.setItem('prodotti', JSON.stringify(state.prodotti));
+    aggiornaListaProdotti();
+}
+
+function eliminaProdotto(id) {
+    if (confirm('Sei sicuro di voler eliminare questo prodotto?')) {
+        state.prodotti = state.prodotti.filter(p => p.id !== id);
+        localStorage.setItem('prodotti', JSON.stringify(state.prodotti));
+        aggiornaListaProdotti();
+    }
+} 
     </script>
 </body>
 </html> 
