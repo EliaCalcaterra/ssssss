@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione Azienda</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="#" onclick="showSection('home')">Company Tracker</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('dipendenti')" data-section="dipendenti">Dipendenti</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('finanze')" data-section="finanze">Finanze</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('magazzino')" data-section="magazzino">Magazzino</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- Sezione Home -->
+        <div id="home" class="section">
+            <div class="home-container">
+                <div class="logo-container">
+                    <img src="cp.png" alt="Company Tracker Logo" class="home-logo">
+                </div>
+                <div class="card home-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Informazioni Azienda</h5>
+                        <form id="aziendaForm">
+                            <div class="mb-3">
+                                <label for="nomeAzienda" class="form-label">Nome Azienda</label>
+                                <input type="text" class="form-control" id="nomeAzienda" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-save me-2"></i>Salva
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sezione Dipendenti -->
+        <div id="dipendenti" class="section">
+            <div class="section-header">
+                <h2>Gestione Dipendenti</h2>
+                <p>Gestisci i dipendenti della tua azienda</p>
+            </div>
+            
+            <div class="form-card">
+                <div class="card-header">
+                    <i class="fas fa-user-plus"></i>
+                    <h5 class="mb-0">Aggiungi Dipendente</h5>
+                </div>
+                <div class="card-body">
+                    <form id="dipendenteForm">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="nomeDipendente" class="form-label">Nome</label>
+                                <input type="text" class="form-control" id="nomeDipendente" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="cognomeDipendente" class="form-label">Cognome</label>
+                                <input type="text" class="form-control" id="cognomeDipendente" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="ruoloDipendente" class="form-label">Ruolo</label>
+                                <input type="text" class="form-control" id="ruoloDipendente" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="stipendioDipendente" class="form-label">Stipendio (€)</label>
+                                <input type="number" class="form-control" id="stipendioDipendente" step="0.01" required>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-plus me-2"></i>Aggiungi Dipendente
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="dipendenti-grid" id="listaDipendenti">
+                <!-- Le card dei dipendenti verranno inserite qui dinamicamente -->
+            </div>
+        </div>
+
+        <!-- Sezione Finanze -->
+        <div id="finanze" class="section">
+            <div class="section-header">
+                <h2>Gestione Finanze</h2>
+                <p>Monitora e gestisci le finanze della tua azienda</p>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="transazione-form">
+                        <h5 class="card-title">Nuova Transazione</h5>
+                        <form id="transazioneForm">
+                            <div class="mb-3">
+                                <label for="tipoTransazione" class="form-label">Tipo</label>
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="tipoTransazione" id="entrata" value="entrata" checked>
+                                    <label class="btn btn-outline-success" for="entrata">
+                                        <i class="fas fa-arrow-up me-2"></i>Entrata
+                                    </label>
+                                    <input type="radio" class="btn-check" name="tipoTransazione" id="uscita" value="uscita">
+                                    <label class="btn btn-outline-danger" for="uscita">
+                                        <i class="fas fa-arrow-down me-2"></i>Uscita
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="importo" class="form-label">Importo</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">€</span>
+                                    <input type="number" step="0.01" class="form-control" id="importo" required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="categoria" class="form-label">Categoria</label>
+                                <select class="form-select" id="categoria" required>
+                                    <option value="vendite">Vendite</option>
+                                    <option value="stipendi">Stipendi</option>
+                                    <option value="fornitori">Fornitori</option>
+                                    <option value="utilities">Utilities</option>
+                                    <option value="altro">Altro</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="descrizione" class="form-label">Descrizione</label>
+                                <input type="text" class="form-control" id="descrizione" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-plus me-2"></i>Aggiungi Transazione
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="riepilogo-finanze mb-4">
+                        <div class="riepilogo-item">
+                            <div class="riepilogo-icon entrata">
+                                <i class="fas fa-arrow-up"></i>
+                            </div>
+                            <div class="riepilogo-details">
+                                <span class="label">Entrate Totali</span>
+                                <span class="value positive" id="totaleEntrate">€0.00</span>
+                            </div>
+                        </div>
+                        <div class="riepilogo-item">
+                            <div class="riepilogo-icon uscita">
+                                <i class="fas fa-arrow-down"></i>
+                            </div>
+                            <div class="riepilogo-details">
+                                <span class="label">Uscite Totali</span>
+                                <span class="value negative" id="totaleUscite">€0.00</span>
+                            </div>
+                        </div>
+                        <div class="riepilogo-item">
+                            <div class="riepilogo-icon bilancio">
+                                <i class="fas fa-balance-scale"></i>
+                            </div>
+                            <div class="riepilogo-details">
+                                <span class="label">Utile Netto</span>
+                                <span class="value" id="utileNetto">€0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <div>
+                                    <h5 class="card-title mb-1">Ultime Transazioni</h5>
+                                    <p class="text-muted mb-0">Cronologia delle operazioni finanziarie</p>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-outline-danger btn-sm" onclick="cancellaCronologiaTransazioni()">
+                                        <i class="fas fa-trash-alt me-2"></i>Cancella Cronologia
+                                    </button>
+                                    <div class="btn-group">
+                                        <button class="btn btn-outline-secondary btn-sm" onclick="filtraTransazioni('tutte')">
+                                            Tutte
+                                        </button>
+                                        <button class="btn btn-outline-success btn-sm" onclick="filtraTransazioni('entrata')">
+                                            Entrate
+                                        </button>
+                                        <button class="btn btn-outline-danger btn-sm" onclick="filtraTransazioni('uscita')">
+                                            Uscite
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="listaTransazioni" class="lista-transazioni"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sezione Magazzino -->
+        <div id="magazzino" class="section">
+            <div class="section-header">
+                <h2>Gestione Magazzino</h2>
+                <p>Controlla il tuo inventario in tempo reale</p>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="prodotto-form">
+                        <div class="card-header-icon">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <h5 class="card-title">Aggiungi Prodotto</h5>
+                        <form id="prodottoForm">
+                            <div class="mb-3">
+                                <label for="nomeProdotto" class="form-label">Nome Prodotto</label>
+                                <input type="text" class="form-control" id="nomeProdotto" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="quantita" class="form-label">Quantità</label>
+                                <input type="number" class="form-control" id="quantita" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-plus me-2"></i>Aggiungi Prodotto
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <div>
+                                    <h5 class="card-title mb-1">Lista Prodotti</h5>
+                                    <p class="text-muted mb-0">Gestisci il tuo inventario</p>
+                                </div>
+                                <div class="btn-group">
+                                    <button class="btn btn-outline-secondary btn-sm" onclick="ordinaProdotti('nome')">
+                                        <i class="fas fa-sort-alpha-down me-2"></i>Nome
+                                    </button>
+                                    <button class="btn btn-outline-secondary btn-sm" onclick="ordinaProdotti('quantita')">
+                                        <i class="fas fa-sort-numeric-down me-2"></i>Quantità
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="listaProdotti" class="prodotti-grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html> 
