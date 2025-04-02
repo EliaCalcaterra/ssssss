@@ -4,9 +4,311 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestione Azienda</title>
-    <link rel="stylesheet" href="css/style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Stili generali */
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .section {
+            display: none;
+        }
+
+        /* Stili Home */
+        .home-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .logo-container {
+            margin-bottom: 2rem;
+        }
+
+        .home-logo {
+            max-width: 200px;
+            height: auto;
+        }
+
+        .home-card {
+            max-width: 500px;
+            width: 100%;
+        }
+
+        /* Stili Dipendenti */
+        .section-header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .section-header h2 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-header p {
+            color: #6c757d;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .card-header {
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-header i {
+            color: #0d6efd;
+        }
+
+        .dipendenti-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .dipendente-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dipendente-info h5 {
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+
+        .dipendente-info p {
+            margin-bottom: 0.25rem;
+            color: #6c757d;
+        }
+
+        /* Stili Finanze */
+        .transazione-form {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .riepilogo-finanze {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .riepilogo-item {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .riepilogo-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .riepilogo-icon.entrata {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .riepilogo-icon.uscita {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .riepilogo-icon.bilancio {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .riepilogo-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .riepilogo-details .label {
+            font-size: 0.875rem;
+            color: #6c757d;
+        }
+
+        .riepilogo-details .value {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+
+        .riepilogo-details .value.positive {
+            color: #28a745;
+        }
+
+        .riepilogo-details .value.negative {
+            color: #dc3545;
+        }
+
+        .lista-transazioni {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .transazione-item {
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .transazione-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .transazione-item.entrata .transazione-icon {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .transazione-item.uscita .transazione-icon {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .transazione-details {
+            flex: 1;
+        }
+
+        .transazione-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.25rem;
+        }
+
+        .transazione-header .categoria {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .transazione-header .data {
+            color: #6c757d;
+            font-size: 0.875rem;
+        }
+
+        .transazione-details .descrizione {
+            color: #6c757d;
+        }
+
+        .transazione-item .importo {
+            font-weight: bold;
+        }
+
+        .transazione-item.entrata .importo {
+            color: #28a745;
+        }
+
+        .transazione-item.uscita .importo {
+            color: #dc3545;
+        }
+
+        /* Stili Magazzino */
+        .prodotto-form {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .card-header-icon {
+            width: 50px;
+            height: 50px;
+            background: #e9ecef;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .card-header-icon i {
+            font-size: 1.5rem;
+            color: #0d6efd;
+        }
+
+        .lista-prodotti {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .prodotto-item {
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .prodotto-info h5 {
+            margin-bottom: 0.25rem;
+            color: #2c3e50;
+        }
+
+        .prodotto-info p {
+            margin-bottom: 0;
+            color: #6c757d;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .riepilogo-finanze {
+                grid-template-columns: 1fr;
+            }
+
+            .dipendenti-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .transazione-header {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
